@@ -1,34 +1,43 @@
-# Numerical parameters 
-T : 50
 
-# Problem constants (in consistent units)
+# Time interval
+T : [0.0, 0.3] # [s]
+
+# Problem constants (given in SI units here)
 physical_constants:
-  T : 300 # temperature [K]
-  F : 96485 # Faraday constant [C/mol]
-  R : 8.314 # Gas constant [J/(K*mol)]
+  T : 300                    # temperature [K]
+  F : 9.64853321233100184E+4 # Faraday constant [C/mol]
+  R : 8.314                  # Gas constant [J/(K*mol)]
 
-C_m : 0.02 # membrane capacitance
-# 
-cell_tag_file : "meshes/cell_tags.xdmf"
-facet_tag_file : "meshes/facet_tags.xdmf"
+# Define data functions that map from mesh cell index to region label
+# and from facet index to interface label.
+cell_tag_file : "meshes/region_tags.xdmf"
+facet_tag_file : "meshes/interface_tags.xdmf"
 
-ics_tags : [1, 2, 3, 4]
+# Define which tags that belong to the intracellular domain (ICS) and
+# which tags that belong to the extracellular space (ECS)
+ics_tags : [1]
 ecs_tags : [0]
 
+# Membrane capacitance
+C_m : 0.02 # [F]
+
+# Define which ion species that are involved, their valence, effective
+# diffusivities, initial concentration, and any volume source functions
 ion_species:
   Na : 
     valence : 1
-    diffusivity : 0.2
+    diffusivity : 1.33E-9 # m^2/s
     initial :     
-      ics : 0.4 # varying by ics/ecs
+      ics : 12.0 # varying by ics/ecs
       ecs : 0.8
-    source: "t < 2 ? 2.1 : 0.0" # c expressions as in old fenics,
-                                # with access to x (spatial) and t for time
+    source: 0.0
 
   K :
     valence : 1
-    diffusivity : 0.2
-    initial : "input/concentration_K.xdmf" # read in from .xdmf file (map from cell to value)
+    diffusivity : 1.96E-9 # m^2/s
+    initial :
+    
+    
   Cl :
     valence : -1
     diffusivity : 0.2
