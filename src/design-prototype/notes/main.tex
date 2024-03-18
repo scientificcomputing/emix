@@ -125,6 +125,61 @@ The electric potentials $\phi_r$ in \eqref{eq:flux} are only determined up to a 
 \newpage
 \section{Benchmark examples}
 
+The description of Model A is directly based on our previous manuscript~\cite{benedusi2024scalable}.
+
+\subsection{Model A (2D)}
+
+We consider an idealized geometry for a single cell represented by a $2$-dimensional square $\Omega=[0,1]^2 \times 10^{-6}$ $\mu$m, with $\Omega_i=[0.25,0.75]^d$ $\mu$m. We consider the active Hodgkin-Huxley membrane model and as stimulus impose a time-periodic sodium current on the entire membrane $\Gamma$:
+\begin{equation}
+  {g}^{\rm Na}_{\rm stim}= 40 e^{-(t\,\text{mod}\,\tau )/0.002},
+\end{equation}
+with $\tau = 10$ ms the time interval between subsequent stimuli. The
+other parameters are as listed in
+Table~\ref{tab:parameters:modelA}. Relevant quantities of interest are
+the evolution of concentrations and potential over time until $T=0.3$s.
+\begin{table}
+  \begin{center}
+    \begin{tabular}{lllll}
+      \toprule
+      Parameter & Symbol & Value & Unit & Ref. \\
+      \midrule
+      gas constant       & $R$ &  8.314             & J/(K mol)   &  \\
+      temperature        & $T$ &  300               & K           & \\
+      Faraday constant & $F$ &  $9.648\cdot 10^4$ & C/mol       & \\
+      membrane capacitance & $C_M$ & $0.02$ & F& \\
+      \midrule
+      Na\textsuperscript{+} diffusion coefficient & $D^\text{Na}_r$ & $1.33\cdot10^{-9}$ & m\textsuperscript{2}/s & \cite{hille2001ion}\\
+      K\textsuperscript{+} diffusion coefficient  & $D^\text{K}_r$  & $1.96\cdot10^{-9}$ & m\textsuperscript{2}/s & \cite{hille2001ion}\\
+      Cl\textsuperscript{\textminus} diffusion coefficient & $D^\text{Cl}_r$ &  $2.03\cdot10^{-9}$ & m\textsuperscript{2}/s & \cite{hille2001ion}\\
+      \midrule
+      initial ICS Na\textsuperscript{+} concentration & $[\text{Na}^+]_i^0$ & 12 & mM & \cite{pods2013electrodiffusion} \\
+      initial ECS Na\textsuperscript{+} concentration & $[\text{Na}^+]_e^0$ & 100& mM & \cite{pods2013electrodiffusion} \\
+      initial ICS K\textsuperscript{+} concentration  & $[\text{K}^+]_i^0$ & 125 & mM & \cite{pods2013electrodiffusion}\\
+      initial ECS K\textsuperscript{+} concentration &$[\text{K}^+]_e^0$ & 4 & mM & \cite{pods2013electrodiffusion}\\
+      initial ICS Cl\textsuperscript{\textminus} concentration & $[\text{Cl}^-]_i^0$ & 137 & mM & \cite{pods2013electrodiffusion}\\
+      initial ECS Cl\textsuperscript{\textminus} concentration & $[\text{Cl}^-]_e^0$ & 104 & mM & \cite{pods2013electrodiffusion}\\
+      initial membrane potential & $\phi_M^0$ & $-67.74$ & mV &  \\
+      \midrule
+      Na\textsuperscript{+} leak conductivity & $g^\text{Na}_\text{leak}$ & 1 & S/m\textsuperscript{2}  & \\
+      K\textsuperscript{+} leak conductivity & $g^\text{K}_\text{leak}$  & 4 & S/m\textsuperscript{2} & \\
+      Cl\textsuperscript{\textminus} leak conductivity & $g^\text{Cl}_\text{leak}$ & 0   & S/m\textsuperscript{2} & \\
+      K\textsuperscript{+}  HH max conductivity & $\bar{g}^\text{K}$ &360  & S/m\textsuperscript{2} & \cite{hodgkin1952quantitative} \\
+      Na\textsuperscript{+} HH max conductivity & $\bar{g}^\text{Na}$   & 1200 & S/m\textsuperscript{2} & \cite{hodgkin1952quantitative} \\
+      \midrule
+      resting membrane potential & $\phi_{\text{rest}}$ & $-65$ & mV &  \\
+      initial Na\textsuperscript{+} activation  & $m_0$ & 0.0379 &  & \cite{hodgkin1952quantitative}\\
+      initial Na\textsuperscript{+} inactivation & $h_0$ & 0.688 &  & \cite{hodgkin1952quantitative}\\
+      initial K\textsuperscript{+} activation & $n_0$ & 0.276 &  & \cite{hodgkin1952quantitative}\\
+      %maximum pump rate & $\rho_{\mathrm{pump}}$ &  $1.115\cdot 10^{-6}$ & mol/m$^2$ s & \cite{halnes2013electrodiffusive}\\
+      %ICS Na\textsuperscript{+} threshold for Na/K-pump & $P_{\mathrm{Na}}$ &  10 & mol/m$^3$  & \cite{halnes2013electrodiffusive}\\
+      %ECS K\textsuperscript{+} threshold for Na/K-pump & $P_{\mathrm{K}}$ &  1.5 & mol/m$^3$  & \cite{halnes2013electrodiffusive}
+      % \bottomrule
+    \end{tabular}
+    \caption{Physical parameters and initial values for Model A with the Hodgkin-Huxley membrane model, copied from~\cite{ellingsrud2020finite, benedusi2024scalable}.}
+    \label{tab:parameters:modelA} 
+  \end{center}
+\end{table}
+
 
 \newpage
 \bibliography{references.bib}
