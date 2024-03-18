@@ -9,7 +9,8 @@ The goal is to design a common interface for different KNP-EMI solvers.
 * Physical parameters (with units) can be constant, vary between intracellular/extracellular space or vary over the mesh cells.
   - Q1: What is our design for speciying spatially-varying parameters (by geometric coordinates)?
   - Q2: What is our design for specifying regionally varying parameters?
-  - Either specify constant, or dictionary (ecs: x, ics: x) or file with mesh markers (diffusivity: "diffusivities.xdmf") 
+  - A: Either specify constant, or dictionary (ecs: x, ics: x) or file with mesh markers (diffusivity: "diffusivities.xdmf")
+  - See example_config.xml for examples of conventions.
 * Initial condition need to be prescribed for all concentrations and the membrane potential \phi_M = \phi_i - \phi_e
 * Domain and subdomain information
   - Map from mesh cell to domain marker: cell_tags (or subdomains) 
