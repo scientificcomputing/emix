@@ -1,0 +1,131 @@
+\documentclass[fleqn,10pt]{wlscirep}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{bm}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{newtxmath} % MER: Prettier math
+%\usepackage{natbib}
+\usepackage{cleveref} % MER: Allows \Cref (but use Section X.Y not Subsection X.Y)
+\usepackage{booktabs} % MER: Prettier tables
+
+\newcommand{\R}{\mathbb{R}} 
+
+\title{Constructing a benchmark collection for simulating ionic electrodiffusion in cellular geometries}
+\author[1]{Pietro Benedusi, Marius Causemann, Ingvild S.~Devold, Jørgen S.~Dokken, Ada J.~Ellingsrud, Halvor Herlyng, Marie E. Rognes}
+\affil[1]{Department of Numerical Analysis and Scientific Computing, Simula Research Laboratory, Oslo, Norway}
+\affil[*]{meg@simula.no}
+
+\begin{abstract}
+\end{abstract}
+\begin{document}
+
+\flushbottom
+\maketitle
+% * <john.hammersley@gmail.com> 2015-02-09T12:07:31.197Z:
+%
+%  Click the title above to edit the author information and abstract
+%
+\thispagestyle{empty}
+
+\section{The KNP-EMI equations}
+
+This presentation is directly based on the problem formulation previously defined~\cite{ellingsrud2020finite, benedusi2024scalable}.
+
+We consider a domain $\Omega = \Omega_i \cup \Omega_e \cup \Gamma \subset \R^d$ for $d \in \{2,3\}$ with $\Omega_i$ and $\Omega_e$ representing the intra- and extracellular domains (ICS, ECS), respectively, and $\Gamma = \partial\Omega_i$ the cellular membrane(s). In general, the intracellular domain can be composed of $N_{\rm cell}\in \mathbb{N}$ disjoint domains $\Omega_i = \bigcup_{j=1}^{N_{\rm cell}}\Omega_{i,j}$, with $\Omega_{i,j}$ representing the $j$th (biological) cell with membrane $\Gamma_j=\partial\Omega_{i,j}$. We consider a set $K$ of ionic species, for example $K = \{\text{Na}^+, \text{K}^+, \text{Cl}^-\}$,  with cardinality $|K|$. For each ionic species $k \in K$ and physical region $r\in\{i,e\}$, we model the evolution of ionic concentrations $[k]_r: \overline{\Omega}_r \times [0,T] \to \R$, as well as electric potentials $\phi_r:\overline{\Omega}_r \times[0,T] \to \R$. We also define the membrane potential $\phi_M : \Gamma \times (0,T] \to \R$ as the jump in the electric potential:
+\begin{equation}
+  \phi_M(x,t) = \phi_i(x,t) - \phi_e(x,t)  \quad \text{for } x \in \Gamma,\, t > 0.
+   \label{eq:membrane-potential}
+\end{equation}
+
+\subsection{Equations in the intracellular and extracellular domains}
+
+For each region $r \in \{i, e\}$ and for each ionic species $k \in K$ and for $t\in (0,T)$ and $x\in\Omega_r$, we consider the $2 \times (|K| + 1)$ time-dependent, partial differential equations
+\begin{subequations}
+  \begin{align}
+    \partial_t [k]_r(x,t) + \nabla \cdot J_r^k(x,t) &= f_r^k(x,t), 
+    \label{eq:conservation-ions} \\
+    \sum_{k\in K}z_k \nabla \cdot J_r^k(x,t) &= 0 .
+    \label{eq:knp}
+  \end{align}
+\end{subequations}
+Here $J_r^k:\overline{\Omega}_r\times[0,T]\to\R^d$ is the ion flux density. We consider a Nernst--Planck relation describing diffusion and drift in the electric field induced by the potential $\phi_r$:
+\begin{equation}
+  J_r^k = J_{r,\mathrm{diff}}^k + J_{r,\mathrm{drift}}^k  
+   = - D_r^k \nabla [k]_r - \frac{D_r^k z_k}{\psi} [k]_r \nabla \phi_r,
+  \label{eq:flux}
+\end{equation}
+where $D_r^k\in\R_+$ is the effective diffusion coefficient of ionic species $k$ in region $r$, $z_k$ is the valence of ion $k$, and $\psi = R T F^{-1}$ is composed of the gas constant $R$, the absolute temperature $T$, and the Faraday constant $F$. Finally, $f_r^k:\Omega_r\times[0,T]\to\R$ represent bulk source terms. 
+
+\subsection{Interface conditions}
+
+We assume that the total ionic current density $I_M:\Gamma\times(0,T]\to\R$ is continuous across $\Gamma$ such that for $t > 0$ and $x \in \Gamma$,
+\begin{equation}\label{eq::I_M1}
+  I_M(x,t) = F \sum_{k \in K} z_k J_i^k(x,t) \cdot n_i(x) = - F \sum_{k \in K} z_k J_e^k(x,t) \cdot n_e(x),
+\end{equation}
+where $n_r$ denotes the normal on the interface pointing out from $\Omega_r$. We further assume that $I_M$ consists of two components: a total ionic channel current $I_{\rm ch}$ and a capacitive current $I_{\rm cap}$. Both of these currents have contributions from each ionic species: 
+\begin{equation}\label{eq::I_M2}
+I_M = I_{\rm ch} + I_{\rm cap} = \sum_{k \in K} I_{\rm ch}^k + \sum_{k \in K} I_{\rm cap}^k .
+\end{equation}
+The ionic channel currents $I_{\rm ch}^k$ will be subject to modelling, while we consider the capacitor equation for the total capacitive current
+\begin{equation}
+I_{\rm cap} = C_m \partial_t \phi_M ,
+\end{equation}
+where $C_m\in\R_+$ is the membrane capacitance. 
+
+As in~\cite[Section 2.1.3]{ellingsrud2020finite}, we derive an expression for $J_r^k \cdot n_r$ that will be of useful in the weak formulation of the KNP-EMI equations. For $k \in K$ and $r \in \{i, e\}$, we introduce the relation
+\begin{equation}
+  \label{eq::I_cap}
+I_{\rm cap}^k = \alpha_r^kI_{\rm cap} = \alpha_r^k C_m \partial_t \phi_M,
+\end{equation}
+and define the ratio
+\begin{equation}
+  \alpha_r^k = \frac{D_r^kz_k^2[k]_r}{\sum_{\ell \in K}D_r^\ell z_\ell^2[\ell]_r} \in [0,1],
+  \quad\text{with} \quad \sum_{k \in K} \alpha_r^k=1.
+\end{equation}
+Combining~\eqref{eq::I_M1}, \eqref{eq::I_M2} and \eqref{eq::I_cap}, we can express the normal fluxes corresponding to a specific ion $k\in K$, as a function of the ionic currents and the membrane potential:
+\begin{equation}\label{eq::J_n}
+J_r^k\cdot n_r= \pm_r\frac{I_{\rm ch}^k + I_{\rm cap}^k}{Fz_k}=\pm_r\frac{I_{\rm ch}^k + \alpha_r^kC_m \partial_t \phi_M}{Fz_k},
+\end{equation}
+for $r \in \{i, e\}$, $\pm_i=1$, and $\pm_e=-1$.
+
+\subsection{Initial conditions}
+\label{sec::ic}
+To close the KNP-EMI system, we impose initial conditions for $k\in K$ and $r\in\{i,e\}$:
+%
+\begin{align}
+&[k]_r(x,0)=[k]_r^0(x), &&\text{for } x\in\Omega_r,\\ 
+&\phi_M(x,0)=\phi_M^0(x), &&\text{for } x\in\Gamma,
+\end{align}
+with $[k]_r^0$ and $\phi_M^0$ representing initial ion concentration and an initial membrane potential, respectively.
+
+\subsection{Boundary conditions}
+\label{sec::bc}
+To close the KNP-EMI system, we impose initial conditions for $k\in K$ and $r\in\{i,e\}$:
+%
+\begin{align}
+&[k]_r(x,0)=[k]_r^0(x), &&\text{for } x\in\Omega_r,\\ 
+&\phi_M(x,0)=\phi_M^0(x), &&\text{for } x\in\Gamma,
+\end{align}
+with $[k]_r^0$ and $\phi_M^0$ representing initial ion concentration and an initial membrane potential, respectively.
+
+We impose homogeneous Neumann boundary conditions on the exterior boundary $\partial \Omega$
+\begin{equation}\label{eq::bc}
+  J_r^k(x,t) \cdot n_r(x) = 0 \quad \text{for } x \in \partial\Omega.
+\end{equation}
+%i.e. a no-flux condition for concentrations and potentials, implying that the total number of ions is conserved in $\Omega$. 
+% Considering a Dirichlet condition would not alter the essence of this work.
+% With homogeneous Neumann boundary conditions on the whole of $\partial\Omega$, 
+The electric potentials $\phi_r$ in \eqref{eq:flux} are only determined up to a (common) additive constant. Therefore, an additional constraint must be considered to enforce uniqueness. Previous works have for example considered a zero-mean condition on $\phi_e$~\cite{ellingsrud2020finite}. 
+
+\subsection{Ionic membrane models}
+\label{sec::ion}
+
+
+\newpage
+\section{Benchmark examples}
+
+
+\newpage
+\bibliography{references.bib}
+\end{document}
