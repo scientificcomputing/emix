@@ -10,6 +10,7 @@ Notes
 * Domain and subdomain information
   - Map from mesh cell to domain marker  
   - Map from mesh facet to facet marker
+  - Do we need more maps to distinguish between boundary conditions, ionic models etc, or can we have a single geometry specification and rather add such information at the solver leveL? 
 * How to handle units!  
 
 **Physical description and parameters**
