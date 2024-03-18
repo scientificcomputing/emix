@@ -1,3 +1,7 @@
+# Authors: Marie E. Rognes, Marius Causemann and Halvor Herlyng
+# Date: March 18 2024
+
+# EMIx benchmark collection Model "A": Unified KNP-EMI problem specification
 
 # Time interval
 T : [0.0, 0.3] # [s]
@@ -10,6 +14,7 @@ physical_constants:
 
 # Define data functions that map from mesh cell index to region label
 # and from facet index to interface label.
+# FIXME
 cell_tag_file : "meshes/region_tags.xdmf"
 facet_tag_file : "meshes/interface_tags.xdmf"
 
@@ -22,42 +27,41 @@ ecs_tags : [0]
 C_m : 0.02 # [F]
 
 # Define which ion species that are involved, their valence, effective
-# diffusivities, initial concentration, and any volume source functions
+# diffusivities, initial concentration, and volume source functions if any
 ion_species:
   Na : 
     valence : 1
     diffusivity : 1.33E-9 # m^2/s
     initial :     
-      ics : 12.0 # varying by ics/ecs
-      ecs : 0.8
-    source: 0.0
+      ics : 12.0  # mM
+      ecs : 100.0 # mM
+    source : 0.0
 
   K :
     valence : 1
     diffusivity : 1.96E-9 # m^2/s
     initial :
-    
-    
+      ics : 125 # mM
+      ecs : 4   # mM
+    source : 0.0
+      
   Cl :
     valence : -1
-    diffusivity : 0.2
+    diffusivity : 2.03E-9 # m^2/s
     initial : 
-      ics : 0.4
-      ecs : 0.3
-      5 : 0.7
-
+      ics : 137 # mM
+      ecs : 104 # mM
+    source : 0.0
 
 boundary_conditions: []
 
+# FIXME: More work needed here. 
 ionic_membrane_models:
-  5 : 
-    model: HH.ode
-    parameters : 
-      beta : 3.2
-    stimuli:
-      Na : 3.2
-    initial_potential: 1
-  "1-4" : "Leak" 
+  1 : 
+    model: "HH" # Hodgkin-Huxley
+    stimuli: 
+      Na : "40.*exp(-(t mod 10)/0.002)" 
+    initial_potential: -67.74E-3 # V
 
   
 
