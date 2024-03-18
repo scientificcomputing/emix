@@ -1,13 +1,14 @@
 
 The goal is to design a common interface for different KNP-EMI solvers.
 
-** Notes from 2024 March EMIx Hackathon**
+**Notes from 2024 March EMIx Hackathon**
 * Recall the finite element terminology: A mesh has cells (codimension 0 entities), facets (codimension 1 entities), edges (codimension 2 entities) and vertics (dimension 0 entities). If d = 2, facets = edges. 
 * We take the KNP-EMI equations as a starting-point with the fields: [k]_r, k \in K, \phi_r for r in {i, e}
 * We distinguish between the intracellular and the extracellular domains.
 * Physical parameters (with units) can be constant, or regionally or spatially-varying.
   - What is our design for speciying spatially-varying parameters (by geometric coordinates)?
-  - What is our design for specifying regionally varying parameters? 
+  - What is our design for specifying regionally varying parameters?
+    - Regionally varying parameters need specification by markers:    
 * Initial condition need to be prescribed for all concentrations and the membrane potential \phi_M = \phi_i - \phi_e
 * Domain and subdomain information
   - Map from mesh cell to domain marker: cell_tags (or subdomains) 
